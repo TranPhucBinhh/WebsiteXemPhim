@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32802.440
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsiteMovie_DAN", "WebsiteMovie_DAN\WebsiteMovie_DAN.csproj", "{7705C8ED-6CB9-4208-A82F-4143CC79132E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsiteFilmtrucTuyenNew", "WebsiteMovie_DAN\WebsiteFilmtrucTuyenNew.csproj", "{7705C8ED-6CB9-4208-A82F-4143CC79132E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

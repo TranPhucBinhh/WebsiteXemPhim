@@ -1,0 +1,26 @@
+# Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+*.nuget.props
+*.nuget.targets
+
+# Hệ điều hành & IDE khác
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Frontend (nếu có)
+node_modules/
+dist/
+build/

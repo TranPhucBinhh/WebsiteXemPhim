@@ -62,19 +62,91 @@ namespace WebsiteMovie_DAN.Controllers
             data.SubmitChanges();
             return RedirectToAction("XemPhimLe", "XemPhim", new { id = phim.ID });
         }
+        //public ActionResult TimKiem(FormCollection c)
+        //{
+        //    var DSPhimBo = data.DSPhimBos.OrderByDescending(x => x.LuotXem).Take(3).ToList();
+        //    ViewData["TopPhim"] = DSPhimBo;
+        //    var tl = data.TheLoais.ToList();
+        //    var nam = data.Nams.ToList();
+        //    var quocgia = data.QuocGias.ToList();
+        //    ViewData["QuocGia"] = quocgia;
+        //    ViewData["TheLoai"] = tl;
+        //    ViewData["Nam"] = nam;
+        //    var tim = c["tim"];
+        //    var bg = data.DSPhimBos.Where(m => m.TenPhim.Contains(tim) == true).ToList();
+        //    return View(bg);
+        //}
+        public interface ITimKiemStrategy
+        {
+            List<object> TimKiem(string keyword);
+        }
+        public class TimKiemPhimBo : ITimKiemStrategy
+        {
+            private WebmovieDataContext data;
+
+            public TimKiemPhimBo(WebmovieDataContext db)
+            {
+                data = db;
+            }
+
+            public List<object> TimKiem(string keyword)
+            {
+                return data.DSPhimBos.Where(m => m.TenPhim.Contains(keyword)).Cast<object>().ToList();
+            }
+        }
+        public class TimKiemPhimLe : ITimKiemStrategy
+        {
+            private WebmovieDataContext data;
+
+            public TimKiemPhimLe(WebmovieDataContext db)
+            {
+                data = db;
+            }
+
+            public List<object> TimKiem(string keyword)
+            {
+                return data.DSPhimLes.Where(m => m.TenPhim.Contains(keyword)).Cast<object>().ToList();
+            }
+        }
+        public class TimKiemContext
+        {
+            private ITimKiemStrategy _strategy;
+
+            public void SetStrategy(ITimKiemStrategy strategy)
+            {
+                _strategy = strategy;
+            }
+
+            public List<object> ThucHienTimKiem(string keyword)
+            {
+                return _strategy?.TimKiem(keyword) ?? new List<object>();
+            }
+        }
         public ActionResult TimKiem(FormCollection c)
         {
             var DSPhimBo = data.DSPhimBos.OrderByDescending(x => x.LuotXem).Take(3).ToList();
             ViewData["TopPhim"] = DSPhimBo;
-            var tl = data.TheLoais.ToList();
-            var nam = data.Nams.ToList();
-            var quocgia = data.QuocGias.ToList();
-            ViewData["QuocGia"] = quocgia;
-            ViewData["TheLoai"] = tl;
-            ViewData["Nam"] = nam;
+            ViewData["QuocGia"] = data.QuocGias.ToList();
+            ViewData["TheLoai"] = data.TheLoais.ToList();
+            ViewData["Nam"] = data.Nams.ToList();
+
             var tim = c["tim"];
-            var bg = data.DSPhimBos.Where(m => m.TenPhim.Contains(tim) == true).ToList();
-            return View(bg);
+            if (string.IsNullOrEmpty(tim))
+            {
+                return View(new List<object>());
+            }
+
+            // Strategy Pattern
+            var timKiemContext = new TimKiemContext();
+
+            timKiemContext.SetStrategy(new TimKiemPhimBo(data));
+            var phimBo = timKiemContext.ThucHienTimKiem(tim);
+            timKiemContext.SetStrategy(new TimKiemPhimLe(data));
+            var phimLe = timKiemContext.ThucHienTimKiem(tim);
+
+            var ketQua = phimBo.Concat(phimLe).ToList();
+
+            return View(ketQua);
         }
         public ActionResult LuotXemTinTuc(int id)
         {

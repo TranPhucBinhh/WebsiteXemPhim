@@ -29,7 +29,7 @@
                     <nav class="classy-navbar justify-content-between" id="anime">
 
                         <!-- Nav LOGO -->
-                        <a href="~/Home/Index" class="nav-brand" style="color: #428bca">NamLoc Movie</a>
+                        <a href="~/Home/Index" class="nav-brand" style="color: #428bca">Niflex Movie</a>
 
                         <!-- Navbar 3 gạch -->
                         <div class="classy-navbar-toggler">
@@ -39,7 +39,7 @@
                         <!-- Menu -->
                         <div class="classy-menu">
                             <div class="logo-nvar">
-                                <a href="#" class="nav-brand" style="color: #428bca">NamLoc Movie</a>
+                                <a href="#" class="nav-brand" style="color: #428bca">Nitflex Movie</a>
                             </div>
                             <!-- Close Button -->
                             <div class="classycloseIcon">
@@ -54,29 +54,50 @@
                                     <li>
                                         <a href="#">Thể loại</a>
                                         <ul class="dropdown">
-                                            @foreach (var item in ViewData["TheLoai"] as List<TheLoai>)
+                                            @foreach (var item in ViewData["TheLoai"] as List<WebsiteMovie_DAN.Models.TheLoai>)
                                             {
-                                                <li><a href="~/TimKiem/TimKiemTheLoai/@item.IDTheLoai">@item.TenTheLoai</a></li>
+                                                <li>
+                                                    <a href="@Url.Action("TimKiem", "TimKiem", new { type = "TheLoai", id = item.IDTheLoai })">
+                                                        @item.TenTheLoai
+                                                    </a>
+                                                </li>
                                             }
 
                                         </ul>
                                     </li>
-                                    <li>
+                                    @*<li>
                                         <a href="#">Năm phát hành</a>
                                         <ul class="dropdown">
 
                                             @foreach (var item in ViewData["Nam"] as List<Nam>)
                                             {
-                                                <li><a href="~/TimKiem/TimKiemNam/@item.MaNam">@item.TenNam</a></li>
+                                                <li><a href="~/TimKiem/TimKiem/@item.MaNam">@item.TenNam</a></li>
+                                            }
+                                        </ul>
+                                    </li>*@
+                                    <li>
+                                        <a href="#">Năm phát hành</a>
+                                        <ul class="dropdown">
+                                            @foreach (var item in ViewData["Nam"] as List<WebsiteMovie_DAN.Models.Nam>)
+                                            {
+                                                <li>
+                                                    <a href="@Url.Action("TimKiem", "TimKiem", new { type = "Nam", id = item.MaNam })">
+                                                        @item.TenNam
+                                                    </a>
+                                                </li>
                                             }
                                         </ul>
                                     </li>
                                     <li>
                                         <a href="#">Quốc Gia</a>
                                         <ul class="dropdown">
-                                            @foreach (var item in ViewData["QuocGia"] as List<QuocGia>)
+                                            @foreach (var item in ViewData["QuocGia"] as List<WebsiteMovie_DAN.Models.QuocGia>)
                                             {
-                                                <li><a href="~/TimKiem/TimKiemQuocGia/@item.MaQG">@item.TenQG</a></li>
+                                                <li>
+                                                    <a href="@Url.Action("TimKiem", "TimKiem", new { type = "QuocGia", id = item.MaQG })">
+                                                        @item.TenQG
+                                                    </a>
+                                                </li>
                                             }
                                         </ul>
                                     </li>
@@ -123,7 +144,7 @@
                                     </a>
                                     <a class="dropdown-item" href="@Url.Action("Index", "XemSau", new { tendn = @Session["TK"] })">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Hộp Phim
+                                        Danh sách phim đã lưu
                                     </a>
                                     <a class="dropdown-item" href="@Url.Action("Index", "LichSuXem", new { tendn = @Session["TK"] })">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -152,8 +173,7 @@
 
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">
-            © 2022 <strong>NamLoc Movie</strong>:
-            <a href="#">Phát triển bới Trương Kim Nam & Phạm Tài Lộc - K19 - KHMT - OU HCMC</a>
+            © 2022 <strong>Dự án Nitflex</strong>:
         </div>
         <!-- Copyright -->
 

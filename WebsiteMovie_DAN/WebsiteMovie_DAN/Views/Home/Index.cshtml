@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "NamLoc Movie";
+    ViewBag.Title = "Nitflex Movie";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using WebsiteMovie_DAN.Models;
@@ -7,7 +7,6 @@
 @model PagedList.PagedList<DSPhimBo>
 
 <div class="clear_navar container" style="width: 100%; padding-top: 60px;">
-
     <div class="slider-container">
         <div class="slider-control left inactive"></div>
         <div class="slider-control right"></div>
@@ -249,11 +248,6 @@
                 </div>
                 <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fanimewithsound%2F&tabs=timeline&width=260&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=false&appId" width="240" height="500" style="border: none; overflow: hidden; border-radius: 10px" scrolling="no" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
-
-
-
-
-
                 <div class="categorias">
                     <h3>Top Phim</h3>
                     @foreach (var item in ViewData["TopPhim"] as List<DSPhimBo>)
@@ -293,3 +287,70 @@
 
         </div>
     </div>
+    <!--<form action="@Url.Action("TimKiem", "TimKiem")" method="get">
+        <div class="search-container">
+            <label for="searchType">Chọn tiêu chí tìm kiếm:</label>
+            <select name="type" id="searchType" class="form-control">
+                <option value="TheLoai">Thể loại</option>
+                <option value="Nam">Năm phát hành</option>
+                <option value="QuocGia">Quốc gia</option>
+            </select>-->
+    <!-- Dropdown thay đổi dựa trên lựa chọn -->
+    <!--<div id="searchInputContainer">
+                <input type="text" name="id" id="searchValue" class="form-control" placeholder="Nhập giá trị tìm kiếm" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+
+    <script>
+    document.getElementById("searchType").addEventListener("change", function() {
+        var type = this.value;
+        var container = document.getElementById("searchInputContainer");
+
+        if (type === "Nam") {
+            // Nếu chọn "Năm phát hành", chỉ cho nhập số
+            container.innerHTML = '<input type="number" name="id" id="searchValue" class="form-control" placeholder="Nhập năm phát hành" required />';
+        } else if (type === "TheLoai") {
+            // Nếu chọn "Thể loại", dùng dropdown lấy từ danh sách thể loại
+            container.innerHTML = '<select name="id" class="form-control"> @foreach (var tl in ViewData["TheLoai"] as List<WebsiteMovie_DAN.Models.TheLoai>) { <option value="@tl.IDTheLoai">@tl.TenTheLoai</option> } </select>';
+        } else if (type === "QuocGia") {
+            // Nếu chọn "Quốc gia", dùng dropdown lấy từ danh sách quốc gia
+            container.innerHTML = '<select name="id" class="form-control"> @foreach (var qg in ViewData["QuocGia"] as List<WebsiteMovie_DAN.Models.QuocGia>) { <option value="@qg.MaQG">@qg.TenQG</option> } </select>';
+        }
+    });
+    </script>-->
+
+    @*<h2>Phim Bộ Mới Nhất</h2>
+    <div class="row">
+        @foreach (var phim in ViewData["PhimBo"] as List<WebsiteMovie_DAN.Models.DSPhimBo>)
+        {
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="@phim.Img" class="card-img-top" alt="@phim.TenPhim">
+                    <div class="card-body">
+                        <h5 class="card-title">@phim.TenPhim</h5>
+                        <a href="@Url.Action("XemPhim", "XemPhim", new { id = phim.ID })" class="btn btn-primary">Xem Phim</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <h2>Phim Lẻ Mới Nhất</h2>
+    <div class="row">
+        @foreach (var phim in ViewData["PhimLe"] as List<WebsiteMovie_DAN.Models.DSPhimLe>)
+        {
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="@phim.Img" class="card-img-top" alt="@phim.TenPhim">
+                    <div class="card-body">
+                        <h5 class="card-title">@phim.TenPhim</h5>
+                        <a href="@Url.Action("XemPhimLe", "XemPhim", new { id = phim.ID })" class="btn btn-primary">Xem Phim</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    </fieldset>*@

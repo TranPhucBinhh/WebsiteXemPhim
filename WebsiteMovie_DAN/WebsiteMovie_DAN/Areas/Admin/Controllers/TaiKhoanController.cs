@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using WebsiteMovie_DAN.Facades;
 using WebsiteMovie_DAN.Models;
 using WebsiteMovie_DAN.Common;
 
@@ -10,90 +7,86 @@ namespace WebsiteMovie_DAN.Areas.Admin.Controllers
 {
     public class TaiKhoanController : Controller
     {
+        private readonly ITaiKhoanFacade _taiKhoanFacade;
+
+        public TaiKhoanController()
+        {
+            _taiKhoanFacade = new TaiKhoanFacade();
+        }
+
         // GET: Admin/TaiKhoan
-        WebmovieDataContext data = new WebmovieDataContext();
         public ActionResult DSTaiKhoan()
         {
-            var tk = data.TaiKhoans.ToList();
+            var tk = _taiKhoanFacade.LayDanhSachTaiKhoan();
             return View(tk);
         }
 
         //Xóa TK
         public ActionResult XoaTK(string tendn)
         {
-            TaiKhoan tk = data.TaiKhoans.SingleOrDefault(n => n.TenDN == tendn);
-            if (tk == null)
+            if (_taiKhoanFacade.XoaTaiKhoan(tendn))
+            {
+                return RedirectToAction("DSTaiKhoan");
+            }
+            else
             {
                 Response.SubStatusCode = 404;
                 return null;
             }
-            data.TaiKhoans.DeleteOnSubmit(tk);
-            data.SubmitChanges();
-            return RedirectToAction("DSTaiKhoan");
         }
 
         //Thêm TK
         [HttpGet]
         public ActionResult ThemTK()
         {
-            TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO();
-            return View(taiKhoanDTO);
+            return View(new TaiKhoanDTO());
         }
+
         [HttpPost]
-        public ActionResult ThemTK(TaiKhoanDTO tk)
+        public ActionResult ThemTK(TaiKhoanDTO tkDTO)
         {
-            string tendn = tk.TenDN;
-            string mk = tk.MatKhau;
-            string em = tk.Email;
-           
-            
-            //var taikhoan = from t in data.TaiKhoans where t.TenDN.Equals(tendn) select t.TenDN;
-            var taikhoan = data.TaiKhoans.ToList();
-            int kt = 0;
-            foreach (var item in taikhoan)
-            {
-                if (item.TenDN == tendn)
-                    kt = 1;
-            }
-            if (String.IsNullOrEmpty(tendn))
+            string tendn = tkDTO.TenDN;
+            string mk = tkDTO.MatKhau;
+            string em = tkDTO.Email;
+
+            var existingTaiKhoan = _taiKhoanFacade.LayTaiKhoanTheoTenDangNhap(tendn);
+
+            if (string.IsNullOrEmpty(tendn))
                 ViewData["Loi"] = "Tên đăng nhập không được để trống !";
-            else if (String.IsNullOrEmpty(mk))
+            else if (string.IsNullOrEmpty(mk))
                 ViewData["Loi1"] = "Mật khẩu không được để trống !";
-            else if (String.IsNullOrEmpty(em))
+            else if (string.IsNullOrEmpty(em))
                 ViewData["Loi3"] = "Email không được để trống !";
-            else if (kt == 1)
-            {
+            else if (existingTaiKhoan != null)
                 ViewData["Loi2"] = "Đã có tài khoản này";
-            }
             else
             {
-                //tk.TenDN = tendn;
-                //tk.MatKhau = mk;
-                TaiKhoan taiKhoan = new TaiKhoan();
-                taiKhoan.TenDN = tendn;
-                taiKhoan.MatKhau = SHA_Hash.SHA1(mk);
-                taiKhoan.Email = tk.Email;
-                if (tk.Quyen == null ||tk.Quyen=="False")
+                var taiKhoan = new TaiKhoan
                 {
-                    taiKhoan.Quyen = false;
+                    TenDN = tendn,
+                    MatKhau = SHA_Hash.SHA1(mk),
+                    Email = tkDTO.Email,
+                    Quyen = tkDTO.Quyen == "True"
+                };
+
+                if (_taiKhoanFacade.ThemTaiKhoan(taiKhoan))
+                {
+                    return RedirectToAction("DSTaiKhoan");
                 }
                 else
                 {
-                    taiKhoan.Quyen = true;
+                    ViewBag.ErrorMessage = "Có lỗi xảy ra khi thêm tài khoản.";
+                    return View();
                 }
-
-                data.TaiKhoans.InsertOnSubmit(taiKhoan);
-                data.SubmitChanges();
-                return RedirectToAction("DSTaiKhoan");
             }
 
-            return View();
+            return View(tkDTO);
         }
 
         //Sửa
         public ActionResult SuaTK(string tendn)
         {
-            var tk = data.TaiKhoans.First(n => n.TenDN == tendn);
+            var tk = _taiKhoanFacade.LayTaiKhoanTheoTenDangNhap(tendn);
             if (tk == null)
             {
                 Response.SubStatusCode = 404;
@@ -105,20 +98,35 @@ namespace WebsiteMovie_DAN.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult SuaTK(string tendn, FormCollection collection)
         {
-            var tk = data.TaiKhoans.First(n => n.TenDN == tendn);
+            var tk = _taiKhoanFacade.LayTaiKhoanTheoTenDangNhap(tendn);
+            if (tk == null)
+            {
+                Response.SubStatusCode = 404;
+                return null;
+            }
+
             var mk = collection["MatKhau"];
-            if (String.IsNullOrEmpty(mk))
+            var email = collection["Email"];
+
+            if (string.IsNullOrEmpty(mk))
             {
                 ViewData["Loi"] = "Không được để trống";
+                return View(tk);
             }
             else
             {
                 tk.MatKhau = SHA_Hash.SHA1(mk);
-                UpdateModel(tk);
-                data.SubmitChanges();
-                return RedirectToAction("DSTaiKhoan");
+                tk.Email = email; // Cập nhật email
+                if (_taiKhoanFacade.CapNhatTaiKhoan(tk))
+                {
+                    return RedirectToAction("DSTaiKhoan");
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Có lỗi xảy ra khi cập nhật tài khoản.";
+                    return View(tk);
+                }
             }
-            return this.SuaTK(tendn);
         }
     }
 }
