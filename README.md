@@ -1,7 +1,5 @@
-# WebsiteMovie_DAN
-Create Website Watching Movie with ASP.NET MVC + Database SQL Server
-# 🎬 WebsiteXemPhim — Ứng dụng xem phim (ASP.NET MVC)
-
+# 🎬 WebsiteXemPhim — Ứng dụng xem phim (ASP.NET MVC) 
+Phạm vi: đồ án môn học
 > Nền tảng xem phim trực tuyến: duyệt danh mục, xem trailer/phim, đánh giá, bình luận, danh sách yêu thích, quản trị nội dung.  
 > Tập trung vào tính năng và hướng dẫn kỹ thuật.
 > Thi triển code theo các mẫu thiết kế của phần mềm
@@ -22,8 +20,8 @@ Create Website Watching Movie with ASP.NET MVC + Database SQL Server
 ## 🧱 Kiến trúc & Công nghệ
 
 - **Web**: ASP.NET Core MVC
-- **ORM**: Entity Framework Core/EF6 (Code First).
-- **CSDL**: SQL Server (hoặc PostgreSQL/MySQL).
+- **ORM**: Entity Framework Core/EF6
+- **CSDL**: SQL Server
 
 
 ## 📬 Liên hệ
